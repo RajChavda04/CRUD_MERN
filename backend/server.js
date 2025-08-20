@@ -6,16 +6,15 @@ app.use(cors());
 require('dotenv').config();
 require("./models/db")
 const UserModel = require("./models/User")
+const bodyParser = require("body-parser")
+const ProductRoutes = require("./Routes/ProductRoutes")
 
-
+app.use(bodyParser.json())
 
 const PORT = process.env.PORT || 8082
 app.get("/ping", (req,res)=>{
     res.send("PONG")
 })
-
-
-
 
 app.post("/createUser" , (req,res)=>{
     UserModel.create(req.body)
@@ -53,11 +52,11 @@ app.put("/updateUser/:id" , (req,res)=>{
 app.delete("/deleteUser/:id", (req,res)=>{
      const id= req.params.id;
      UserModel.findByIdAndDelete({_id:id})
-     .then(res=>res.json(res))
+     .then(res=>res.json(user))
      .catch(err=>res.json(err))
 })
 
-
+app.use('/api/products',ProductRoutes)
 
 
 app.listen(PORT, ()=>{
